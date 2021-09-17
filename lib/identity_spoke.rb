@@ -12,7 +12,7 @@ module IdentitySpoke
       external_campaign_id = JSON.parse(external_system_params)['campaign_id'].to_i
       external_campaign_name = Campaign.find(external_campaign_id).title
       members = Member.where(id: member_ids).with_mobile
-      yield members, external_campaign_name
+      yield members, external_campaign_name, external_system_params
     rescue => e
       raise e
     end

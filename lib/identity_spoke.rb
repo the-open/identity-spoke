@@ -116,6 +116,12 @@ module IdentitySpoke
   def self.handle_new_message(sync_id, message_id)
     ## Get the message
     message = IdentitySpoke::Message.find(message_id)
+    
+    ## Check that we have an assignment
+    if message.assignment.blank?
+      Notify.warning "Spoke: Received message without an assignment, cannot process.", "message_id: #{message_id}, cell: #{message.contact_number}"
+      return
+    end
 
     ## Find who is the campaign contact for the message
     unless campaign_contact = IdentitySpoke::CampaignContact.find_by(campaign_id: message.assignment.campaign.id, cell: message.contact_number)
